@@ -25,15 +25,21 @@ Ceòl (Gaelic for "music") Stream turns a headless Debian system into a high-qua
 ## Quick Start
 
 ```sh
-git clone https://github.com/youruser/ceol-stream.git
+git clone https://github.com/mawewo/ceol-stream.git
 cd ceol-stream
 chmod +x ceol-stream-setup.sh
-sudo ./ceol-stream-setup.sh
+sudo ./ceol-stream-setup.sh --install
 ```
 
 The script will ask which services to install and guide you through the setup.
 
 After installation, open the web UI at `http://<device-ip>:8484`.
+
+To uninstall everything cleanly:
+
+```sh
+sudo ./ceol-stream-setup.sh --uninstall
+```
 
 ## How It Works
 
