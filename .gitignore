@@ -1,0 +1,15 @@
+# Session logs
+*.jsonl
+
+# Claude config
+.claude/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+*~
+__pycache__/

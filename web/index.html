@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ce&ograve;l Stream</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img class="logo-icon" src="logo.png" alt="Ce&ograve;l Stream">
+            <div>
+                <h1>Ce&ograve;l Stream</h1>
+                <span class="subtitle" id="hostname-display">Audio Streamer</span>
+            </div>
+        </div>
+        <nav>
+            <button class="nav-btn active" data-tab="services">Services</button>
+            <button class="nav-btn" data-tab="audio">Audio</button>
+            <button class="nav-btn" data-tab="network">Network</button>
+            <button class="nav-btn" data-tab="system">System</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Services Tab -->
+        <section id="tab-services" class="tab active">
+            <div class="section-header">
+                <h2>Streaming Services</h2>
+                <p class="hint">All services run simultaneously. Play from any source — switching is seamless.</p>
+            </div>
+            <div id="services-list" class="cards">
+                <div class="card skeleton"></div>
+                <div class="card skeleton"></div>
+                <div class="card skeleton"></div>
+            </div>
+            <div class="info-box">
+                <strong>AirPlay 1 (classic)</strong> — Ce&ograve;l Stream uses AirPlay 1 deliberately.
+                AirPlay 1 streams truly lossless audio (Apple Lossless / ALAC at 16-bit / 44.1 kHz, CD quality).
+                AirPlay 2, despite Apple's claims, uses lossy AAC encoding in many scenarios.
+                For bit-perfect audiophile playback, AirPlay 1 is the correct choice.
+            </div>
+        </section>
+
+        <!-- Audio Tab -->
+        <section id="tab-audio" class="tab">
+            <div class="section-header">
+                <h2>USB DAC</h2>
+                <p class="hint">Select your USB DAC for audio output. Signal path: Network → Service → ALSA → USB DAC (bit-perfect).</p>
+            </div>
+            <div id="dac-list" class="cards">
+                <div class="card skeleton"></div>
+            </div>
+            <div class="section-header" style="margin-top: 2rem;">
+                <h2>Signal Path</h2>
+            </div>
+            <div class="signal-path">
+                <div class="signal-node">
+                    <span class="signal-label">Source</span>
+                    <span class="signal-value">Roon / HQPlayer / AirPlay / UPnP</span>
+                </div>
+                <div class="signal-arrow">→</div>
+                <div class="signal-node">
+                    <span class="signal-label">Network</span>
+                    <span class="signal-value">TCP/IP (RAAT / NAA / RTSP / UPnP)</span>
+                </div>
+                <div class="signal-arrow">→</div>
+                <div class="signal-node">
+                    <span class="signal-label">Renderer</span>
+                    <span class="signal-value">Bridge / NAA / Shairport / gmrender</span>
+                </div>
+                <div class="signal-arrow">→</div>
+                <div class="signal-node">
+                    <span class="signal-label">Output</span>
+                    <span class="signal-value">ALSA hw: (exclusive)</span>
+                </div>
+                <div class="signal-arrow">→</div>
+                <div class="signal-node highlight">
+                    <span class="signal-label">DAC</span>
+                    <span class="signal-value" id="signal-dac-name">USB DAC</span>
+                </div>
+            </div>
+            <div class="info-box">
+                <strong>Bit-perfect playback</strong> — No sample rate conversion, no mixing, no volume adjustment in software.
+                Each service sends audio directly to the ALSA hardware device. The DAC receives the original signal
+                untouched. Roon and HQPlayer support up to 24-bit / 192 kHz. AirPlay streams at 16-bit / 44.1 kHz (CD quality, lossless).
+                <br><br>
+                <strong>DSD support</strong> — Roon Bridge and HQPlayer NAA support DSD streaming (DoP) to compatible DACs.
+                AirPlay does not support DSD. Check each DAC's capabilities above to see if your device supports DSD.
+            </div>
+        </section>
+
+        <!-- Network Tab -->
+        <section id="tab-network" class="tab">
+            <div class="section-header">
+                <h2>Hostname</h2>
+            </div>
+            <div class="card">
+                <div class="input-row">
+                    <input type="text" id="hostname-input" placeholder="ceol-stream" spellcheck="false">
+                    <button class="btn" id="hostname-save">Save</button>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>Network Interfaces</h2>
+            </div>
+            <div id="network-interfaces" class="cards">
+                <div class="card skeleton"></div>
+            </div>
+
+            <div class="section-header">
+                <h2>Wi-Fi</h2>
+            </div>
+            <div class="card">
+                <div class="wifi-status" id="wifi-status">Not connected</div>
+                <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem;">
+                    <button class="btn" id="wifi-scan-btn">Scan Networks</button>
+                    <button class="btn btn-ghost" id="wifi-disconnect-btn" style="display:none;">Disconnect</button>
+                </div>
+                <div id="wifi-networks" class="wifi-list" style="display:none;"></div>
+            </div>
+        </section>
+
+        <!-- System Tab -->
+        <section id="tab-system" class="tab">
+            <div class="section-header">
+                <h2>System Information</h2>
+            </div>
+            <div id="system-info" class="card">
+                <div class="card skeleton"></div>
+            </div>
+
+            <div class="section-header">
+                <h2>Maintenance</h2>
+            </div>
+            <div class="cards">
+                <div class="card">
+                    <h3>System Update</h3>
+                    <p class="hint">Update system packages. Services will remain running.</p>
+                    <button class="btn" id="update-btn">Update System</button>
+                    <pre id="update-output" style="display:none;"></pre>
+                </div>
+                <div class="card">
+                    <h3>Reboot</h3>
+                    <p class="hint">Reboot the system. All services will restart automatically.</p>
+                    <button class="btn btn-danger" id="reboot-btn">Reboot</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- WiFi password dialog -->
+    <div id="wifi-dialog" class="dialog-overlay" style="display:none;">
+        <div class="dialog">
+            <h3>Connect to <span id="wifi-dialog-ssid"></span></h3>
+            <input type="password" id="wifi-password" placeholder="Password" autocomplete="off">
+            <div class="dialog-actions">
+                <button class="btn btn-ghost" id="wifi-cancel">Cancel</button>
+                <button class="btn" id="wifi-connect">Connect</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Static IP dialog -->
+    <div id="static-dialog" class="dialog-overlay" style="display:none;">
+        <div class="dialog">
+            <h3>Static IP for <span id="static-dialog-iface"></span></h3>
+            <input type="text" id="static-ip" placeholder="192.168.1.100/24">
+            <input type="text" id="static-gateway" placeholder="Gateway (e.g. 192.168.1.1)">
+            <input type="text" id="static-dns" placeholder="DNS (e.g. 1.1.1.1)">
+            <div class="dialog-actions">
+                <button class="btn btn-ghost" id="static-cancel">Cancel</button>
+                <button class="btn" id="static-save">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <span>Ce&ograve;l Stream &mdash; open source audiophile streamer</span>
+        <br>
+        <span class="footer-tagline">Part of the <a href="https://ceol-music.org" target="_blank" rel="noopener">Ce&ograve;l project</a> &middot; Ce&ograve;l is the Gaelic word for music</span>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
